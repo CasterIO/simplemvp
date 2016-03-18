@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,12 @@ public class UserFragment extends Fragment implements UserView {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         userFirstName = (EditText) v.findViewById(R.id.user_first_name);
         userLastName = (EditText) v.findViewById(R.id.user_last_name);
+        v.findViewById(R.id.user_save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userPresenter.saveUser();
+            }
+        });
         return v;
     }
 
@@ -106,10 +113,5 @@ public class UserFragment extends Fragment implements UserView {
     @Override
     public void showUserNameIsRequired() {
         Toast.makeText(getActivity(), R.string.user_name_required_message, Toast.LENGTH_SHORT).show();
-    }
-
-    @OnClick(R.id.user_save)
-    public void onSave(View v) {
-        userPresenter.saveUser();
     }
 }
