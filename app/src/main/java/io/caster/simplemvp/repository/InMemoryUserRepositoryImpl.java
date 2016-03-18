@@ -32,8 +32,11 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
      */
     @Override
     public void save(User u) {
-        u.setId(u.getId());
-        u.setFirstName(u.getFirstName());
-        u.setLastName(u.getLastName());
+        if(this.u == null) {
+            this.u = getUser(0); // create the in memory user.
+        }
+        this.u.setId(u.getId());
+        this.u.setFirstName(u.getFirstName());
+        this.u.setLastName(u.getLastName());
     }
 }
