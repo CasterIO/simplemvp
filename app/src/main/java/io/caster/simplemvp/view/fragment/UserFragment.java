@@ -77,7 +77,7 @@ public class UserFragment extends Fragment implements UserView {
 
     @Override
     public int getUserId() {
-        return getArguments() == null ? 0 : getArguments().getInt(USER_ID);
+        return getArguments() == null ? 0 : getArguments().getInt(USER_ID, 0);
     }
 
     @Override
