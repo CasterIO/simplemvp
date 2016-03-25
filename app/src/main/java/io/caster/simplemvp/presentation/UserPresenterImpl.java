@@ -1,7 +1,5 @@
 package io.caster.simplemvp.presentation;
 
-import android.text.TextUtils;
-
 import io.caster.simplemvp.model.User;
 import io.caster.simplemvp.repository.UserRepository;
 import io.caster.simplemvp.view.UserView;
@@ -46,7 +44,7 @@ public class UserPresenterImpl implements UserPresenter {
     @Override
     public void saveUser() {
         if(u != null) {
-            if(TextUtils.isEmpty(view.getFirstName()) || TextUtils.isEmpty(view.getLastName())) {
+            if(view.getFirstName().trim().equals("") || view.getLastName().trim().equals("")) {
                 view.showUserNameIsRequired();
             } else {
                 u.setFirstName(view.getFirstName());
