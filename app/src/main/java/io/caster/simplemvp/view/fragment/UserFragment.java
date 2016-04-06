@@ -58,21 +58,9 @@ public class UserFragment extends Fragment implements UserView {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        userPresenter.setView(this);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        userPresenter.resume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        userPresenter.pause();
+        userPresenter.setView(this);
     }
 
     @Override

@@ -15,16 +15,6 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
-    public void resume() {
-        loadUserDetails();
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
     public void loadUserDetails() {
         int userId = view.getUserId();
         u = userRepository.getUser(userId);
@@ -39,6 +29,7 @@ public class UserPresenterImpl implements UserPresenter {
     @Override
     public void setView(UserView view) {
         this.view = view;
+        loadUserDetails();
     }
 
     @Override

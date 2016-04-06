@@ -42,8 +42,6 @@ public class PresenterTests {
         mockView = mock(UserView.class);
 
         presenter = new UserPresenterImpl(mockUserRepository);
-        presenter.setView(mockView);
-
     }
 
     @Test
@@ -58,7 +56,7 @@ public class PresenterTests {
     public void shouldBeABleToLoadTheUserFromTheRepositoryWhenValidUserIsPresent() {
         when(mockView.getUserId()).thenReturn(1);
 
-        presenter.loadUserDetails();
+        presenter.setView(mockView );
 
         // Verify repository interactions
         verify(mockUserRepository, times(1)).getUser(anyInt());
@@ -77,7 +75,7 @@ public class PresenterTests {
         // Return null when we ask the repo for a user.
         when(mockUserRepository.getUser(anyInt())).thenReturn(null);
 
-        presenter.loadUserDetails();
+        presenter.setView(mockView);
 
         // Verify repository interactions
         verify(mockUserRepository, times(1)).getUser(anyInt());
@@ -94,7 +92,7 @@ public class PresenterTests {
         when(mockView.getUserId()).thenReturn(1);
 
         // Load the user
-        presenter.loadUserDetails();
+        presenter.setView(mockView);
 
         verify(mockView, times(1)).getUserId();
 
@@ -123,7 +121,7 @@ public class PresenterTests {
         when(mockView.getUserId()).thenReturn(1);
 
         // Load the user
-        presenter.loadUserDetails();
+        presenter.setView(mockView);
 
         verify(mockView, times(1)).getUserId();
 
@@ -146,19 +144,9 @@ public class PresenterTests {
         verify(mockView, times(1)).showUserSavedMessage();
     }
 
-
     @Test
-    public void shouldNotHaveInteractionsOnPause() {
-        presenter.pause();
-
-        verifyZeroInteractions(mockUserRepository);
-        verifyZeroInteractions(mockView);
-    }
-
-    @Test
-    public void shouldLoadUserDetailsWhenResumeCalled() {
-        presenter.resume();
-
+    public void shouldLoadUserDetailsWhenTheViewIsSet() {
+        presenter.setView(mockView);
         verify(mockUserRepository, times(1)).getUser(anyInt());
         verify(mockView, times(1)).displayFirstName(anyString());
         verify(mockView, times(1)).displayLastName(anyString());
