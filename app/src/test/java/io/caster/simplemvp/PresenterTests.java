@@ -6,6 +6,7 @@ import org.junit.Test;
 import io.caster.simplemvp.model.User;
 import io.caster.simplemvp.presentation.UserPresenter;
 import io.caster.simplemvp.presentation.UserPresenterImpl;
+import io.caster.simplemvp.presentation.ViewNotFoundException;
 import io.caster.simplemvp.repository.UserRepository;
 import io.caster.simplemvp.view.UserView;
 
@@ -101,7 +102,7 @@ public class PresenterTests {
 
         presenter.saveUser();
 
-        verify(mockView, times(1)).getFirstName();
+        verify(mockView, times(2)).getFirstName();
         verify(mockView, never()).getLastName();
         verify(mockView, times(1)).showUserNameIsRequired();
 
@@ -111,8 +112,8 @@ public class PresenterTests {
 
         presenter.saveUser();
 
-        verify(mockView, times(2)).getFirstName(); // Called two times now, once before, and once now
-        verify(mockView, times(1)).getLastName();  // Only called once
+        verify(mockView, times(4)).getFirstName(); // Called two times now, once before, and once now
+        verify(mockView, times(2)).getLastName();  // Only called once
         verify(mockView, times(2)).showUserNameIsRequired(); // Called two times now, once before and once now
     }
 
@@ -131,8 +132,8 @@ public class PresenterTests {
         presenter.saveUser();
 
         // Called two more times in the saveUser call.
-        verify(mockView, times(2)).getFirstName();
-        verify(mockView, times(2)).getLastName();
+        verify(mockView, times(3)).getFirstName();
+        verify(mockView, times(3)).getLastName();
 
         assertThat(user.getFirstName(), is("Foo"));
         assertThat(user.getLastName(), is("Bar"));
@@ -152,12 +153,53 @@ public class PresenterTests {
         verify(mockView, times(1)).displayLastName(anyString());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionWhenViewIsNull() {
+    @Test(expected = ViewNotFoundException.class)
+    public void shouldThrowViewNotFoundExceptionWhenViewIsNull() {
         // Null out the view
         presenter.setView(null);
 
         // Try to load the screen which will force interactions with the view
         presenter.loadUserDetails();
+    }
+
+    @Test
+    public void shouldBeAbleToHandleNullFirstName() {
+        when(mockView.getUserId()).thenReturn(1);
+
+        // Load the user
+        presenter.setView(mockView);
+
+        verify(mockView, times(1)).getUserId();
+
+        // Set up the view mock
+        when(mockView.getFirstName()).thenReturn(null);
+
+        presenter.saveUser();
+
+        verify(mockView, times(1)).getFirstName();
+        verify(mockView, never()).getLastName();
+        verify(mockView, times(1)).showUserNameIsRequired();
+
+    }
+
+    @Test
+    public void shouldBeAbleToHandleNullLastName() {
+        when(mockView.getUserId()).thenReturn(1);
+
+        // Load the user
+        presenter.setView(mockView);
+
+        verify(mockView, times(1)).getUserId();
+
+        // Set up the view mock
+        when(mockView.getFirstName()).thenReturn("foo");
+        when(mockView.getLastName()).thenReturn(null);
+
+        presenter.saveUser();
+
+        verify(mockView, times(2)).getFirstName();
+        verify(mockView, times(1)).getLastName();
+        verify(mockView, times(1)).showUserNameIsRequired();
+
     }
 }
